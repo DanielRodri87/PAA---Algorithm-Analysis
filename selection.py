@@ -1,9 +1,9 @@
 from random import randint as rd
 import time as t
 
-TAMANHO1 = 1000
-TAMANHO2 = 2000
-TAMANHO3 = 3000
+TAMANHO1 = 100000
+TAMANHO2 = 250000
+TAMANHO3 = 500000
 
 def selection_sort(lista):
     for i in range(1, len(lista)):
