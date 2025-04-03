@@ -2,9 +2,9 @@ import time
 import matplotlib.pyplot as plt
 
 MIN_MERGE = 32
-SET_1 = 100000
-SET_2 = 250000
-SET_3 = 500000
+SET_1 = 10000
+SET_2 = 25000
+SET_3 = 50000
 
 def calc_min_run(n):
     """Calculate the minimum run length for TimSort."""

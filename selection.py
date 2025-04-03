@@ -1,9 +1,9 @@
 import time
 import matplotlib.pyplot as plt
 
-SET_1 = 100000
-SET_2 = 250000
-SET_3 = 500000
+SET_1 = 10000
+SET_2 = 25000
+SET_3 = 50000
 
 def selection_sort(arr):
     """Implementação correta do Selection Sort"""
@@ -60,6 +60,8 @@ def measure_performance():
             
             results[name].append(elapsed)
             print(f"{name}: {elapsed:.3f}s")
+        
+    print(results["Decrescente"])
 
     # Plotar resultados
     plt.figure(figsize=(10, 6))

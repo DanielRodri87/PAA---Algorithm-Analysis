@@ -1,8 +1,8 @@
 import numpy as np
 
-SET_1 = 100000
-SET_2 = 250000
-SET_3 = 500000
+SET_1 = 10000
+SET_2 = 25000
+SET_3 = 50000
 
 def generate_random_files(file_name, size):
     numbers = np.random.randint(0, 1000000, size)
