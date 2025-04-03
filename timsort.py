@@ -1,4 +1,3 @@
-import random
 import time
 import matplotlib.pyplot as plt
 
@@ -71,7 +70,18 @@ def generate_descending(set_size):
     return list(range(set_size, -1, -1))
 
 def generate_random(set_size):
-    return [random.randint(0, set_size) for _ in range(set_size)]
+    if set_size == SET_1:
+        filename = "set1.txt"
+    elif set_size == SET_2:
+        filename = "set2.txt"
+    elif set_size == SET_3:
+        filename = "set3.txt"
+    else:
+        raise ValueError("Tamanho de conjunto inválido")
+    
+    with open(filename, 'r') as f:
+        arr = [int(line.strip()) for line in f]
+    return arr
 
 generators = [generate_ascending, generate_descending, generate_random]
 generator_names = ["Crescente", "Decrescente", "Aleatório"]
@@ -112,6 +122,3 @@ plt.title("Desempenho do TimSort")
 plt.legend()
 plt.grid()
 plt.show()
-
-
-

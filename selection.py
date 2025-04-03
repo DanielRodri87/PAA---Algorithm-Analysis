@@ -1,113 +1,77 @@
-from random import randint as rd
-import time as t
+import time
+import matplotlib.pyplot as plt
 
-TAMANHO1 = 100000
-TAMANHO2 = 250000
-TAMANHO3 = 500000
+SET_1 = 100000
+SET_2 = 250000
+SET_3 = 500000
 
-def selection_sort(lista):
-    for i in range(1, len(lista)):
-        k = i
-        for j in range(i + 1, len(lista)):
-            if lista[j] < lista[k]:
-                k = j
-        lista[i], lista[k] = lista[k], lista[i]
+def selection_sort(arr):
+    """Implementação correta do Selection Sort"""
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i+1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
 
-def inserir_aleatoriamente(lista, t1):
-    i = 0
-    while i < t1:
-        value = rd(1, t1)
-        if value not in lista:
-            lista.append(value)
-        i += 1
+def generate_ascending(set_size):
+    """Gera lista ordenada ascendentemente"""
+    return list(range(1, set_size + 1))
+
+def generate_descending(set_size):
+    """Gera lista ordenada descendentemente"""
+    return list(range(set_size, 0, -1))
+
+def generate_random(set_size):
+    """Lê lista aleatória do arquivo correspondente"""
+    if set_size == SET_1:
+        filename = "set1.txt"
+    elif set_size == SET_2:
+        filename = "set2.txt"
+    elif set_size == SET_3:
+        filename = "set3.txt"
+    else:
+        raise ValueError("Tamanho de conjunto inválido")
+    
+    with open(filename, 'r') as f:
+        return [int(line.strip()) for line in f]
+
+def measure_performance():
+    """Mede o desempenho e gera gráfico"""
+    set_sizes = [SET_1, SET_2, SET_3]
+    generators = [
+        ("Crescente", generate_ascending),
+        ("Decrescente", generate_descending),
+        ("Aleatório", generate_random)
+    ]
+    
+    results = {name: [] for name, _ in generators}
+    
+    for size in set_sizes:
+        print(f"\nTestando para tamanho: {size}")
+        for name, generator in generators:
+            dataset = generator(size)
             
-
-def inserir_decrescente(lista, t1):
-    for i in range(t1):
-        lista.append(t1 - i)
+            # Medir tempo com cópia para não alterar o dataset original
+            start = time.perf_counter()
+            selection_sort(dataset.copy())
+            elapsed = time.perf_counter() - start
             
+            results[name].append(elapsed)
+            print(f"{name}: {elapsed:.3f}s")
 
-def inserir_crescente(lista, t1):
-    for i in range(1, t1):
-        lista.append(i)
-            
-
-def printar_lista(lista):
-    for i in range(len(lista)):
-        print(lista[i], end=" ")
-    print()
-
-def menu_tamanho(lista1, lista2, lista3, tamanho):
-    while True:
-        print("\nEscolha uma opcao:")
-        print("1. Inserir numeros aleatorios")
-        print("2. Inserir numeros em ordem decrescente")
-        print("3. Inserir numeros em ordem crescente")
-        print("4. Ordenar lista aleatoria")
-        print("5. Ordenar lista decrescente")
-        print("6. Ordenar lista crescente")
-        print("0. Sair")
-        opcao = int(input("Digite sua opcao: "))
-        
-        if opcao == 1:
-            inserir_aleatoriamente(lista1, tamanho)
-            printar_lista(lista1)
-        elif opcao == 2:
-            inserir_decrescente(lista2, tamanho)
-            printar_lista(lista2)
-        elif opcao == 3:
-            inserir_crescente(lista3, tamanho)
-            printar_lista(lista3)
-        elif opcao == 4:
-            inicio = t.time()
-            selection_sort(lista1)
-            fim = t.time()
-            print("Lista aleatoria apos a ordenacao:", lista1)
-            print(f"Tempo de execucao: {fim - inicio:.9f} segundos")
-        elif opcao == 5:
-            inicio = t.time()
-            selection_sort(lista2)
-            fim = t.time()
-            print("Lista decrescente apos a ordenacao:", lista2)
-            print(f"Tempo de execucao: {fim - inicio:.9f} segundos")
-        elif opcao == 6:
-            inicio = t.time()
-            selection_sort(lista3)
-            fim = t.time()
-            print("Lista crescente apos a ordenacao:", lista3)
-            print(f"Tempo de execucao: {fim - inicio:.9f} segundos")
-        elif opcao == 0:
-            print("Saindo do submenu...")
-            break
-        else:
-            print("Opcao invalida, tente novamente!")
-
-def menu():
-    while True:
-        print("\nEscolha um tamanho:")
-        print("1. Tamanho 1")
-        print("2. Tamanho 2")
-        print("3. Tamanho 3")
-        print("0. Sair")
-        opcao = int(input("Digite sua opcao: "))
-        
-        if opcao == 1:
-            menu_tamanho(lista1, lista2, lista3, TAMANHO1)
-        elif opcao == 2:
-            menu_tamanho(lista1, lista2, lista3, TAMANHO2)
-        elif opcao == 3:
-            menu_tamanho(lista1, lista2, lista3, TAMANHO3)
-        elif opcao == 0:
-            print("Saindo do programa...")
-            break
-        else:
-            print("Opcao invalida, tente novamente!")
-
-
-#variaveis globais
-lista1 = []
-lista2 = []
-lista3 = []
+    # Plotar resultados
+    plt.figure(figsize=(10, 6))
+    for name in results:
+        plt.plot(set_sizes, results[name], marker='o', label=name)
+    
+    plt.xlabel("Tamanho do Conjunto")
+    plt.ylabel("Tempo de Execução (s)")
+    plt.title("Desempenho do Selection Sort")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
-    menu()
+    measure_performance()
